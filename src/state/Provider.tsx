@@ -11,8 +11,8 @@ export interface GlobalState {
     isProductSerach: boolean;
     setIsProductSearch: React.Dispatch<React.SetStateAction<boolean>>;
 
-    filters: FilterTypes
-    setFilters: React.Dispatch<React.SetStateAction<FilterTypes>>;
+    filterDict: FilterTypes
+    setFilterDict: React.Dispatch<React.SetStateAction<FilterTypes>>;
 }
 
 export const Context = createContext<GlobalState>({
@@ -24,14 +24,14 @@ export const Context = createContext<GlobalState>({
     isProductSerach: false,
     setIsProductSearch: () => { },
 
-    filters: {
+    filterDict: {
         name: "",
         category: "",
         key_features: [],
         min_price: 0,
         max_price: MAX_PRICE_LIMIT
     },
-    setFilters: () => { },
+    setFilterDict: () => { },
 
 });
 
@@ -44,7 +44,7 @@ export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const [isProductSerach, setIsProductSearch] = useState(false);
 
-    const [filters, setFilters] = useState<FilterTypes>({
+    const [filterDict, setFilterDict] = useState<FilterTypes>({
         name: "",
         category: "",
         key_features: [],
@@ -61,8 +61,8 @@ export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({
         isProductSerach,
         setIsProductSearch,
 
-        filters,
-        setFilters,
+        filterDict,
+        setFilterDict,
 
     };
 
