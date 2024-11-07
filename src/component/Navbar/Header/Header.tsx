@@ -2,16 +2,17 @@ import React, { useContext, useState } from "react";
 
 import { AiOutlineHome, AiOutlineMenu } from "react-icons/ai";
 import { FiShoppingBag } from "react-icons/fi";
-import { TfiWrite } from "react-icons/tfi";
+import PersonIcon from '@mui/icons-material/Person';
 import InfoIcon from '@mui/icons-material/Info';
 import SearchIcon from "@mui/icons-material/Search";
-import { AppBar, Badge, Button, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Badge, Button, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
 import { ShoppingCartOutlined } from "@mui/icons-material";
 import SearchBar from "../SearchBar/SearchBar";
 import { Context } from "../../../state/Provider";
 import { useNavigate } from "react-router-dom";
-import logo from '../../../static/images/cpu.png' 
+import logo from '../../../static/images/cpu.png'
 import { useAppSelector } from "../../../Redux/app/hooks";
+import { stringToColor } from "../../../utils/utils";
 
 
 const Header = () => {
@@ -50,7 +51,7 @@ const Header = () => {
           <section onClick={() => navigate('/')} className="flex gap-1 items-center ">
             <img className="w-10 h-10" src={logo} alt="E-shop logo" />
             <Typography className="text-black text-nowrap font-bold text-3xl cursor-pointer">E-Shop</Typography>
-            
+
           </section>
 
           <SearchBar />
@@ -63,6 +64,21 @@ const Header = () => {
                 onClick={() => { Object.keys(cartState).length > 0 && navigate('/product_cart') }}
               />
             </Badge>
+
+            <Avatar
+              className="w-10 h-10 hover:cursor-pointer"
+              onClick={(event: any) => {
+                // menuControl(event);
+                // event.stopPropagation();
+              }}
+              style={{
+                // backgroundColor: user?.email ? stringToColor(user?.email) : "#881337",
+                backgroundColor: "#6d28d9",
+              }}
+            >
+              {/* {user.email ? user.email[0].toUpperCase() : <PersonIcon/>} */}
+              {<PersonIcon />}
+            </Avatar>
 
           </section>
         </Toolbar>
@@ -77,7 +93,7 @@ const Header = () => {
           </Typography>
 
           <section onClick={() => navigate('/')} className="flex gap-[0.1rem] min-[380px]:gap-1 items-center md:w-[20rem] lg:w-[15rem]">
-          <img className="w-8 h-8" src={logo} alt="E-Shop logo" />
+            <img className="w-8 h-8" src={logo} alt="E-Shop logo" />
             <Typography className="text-black text-nowrap text-xl md:text-2xl font-bold cursor-pointer">E-Shop</Typography>
           </section>
           <section className=" flex gap-3 justify-between">
@@ -85,7 +101,7 @@ const Header = () => {
             <SearchIcon
               fontSize="large"
               className="text-violet-700"
-              sx={{  padding: "0.25rem 0 0 0.5rem" }}
+              sx={{ padding: "0.25rem 0 0 0.5rem" }}
 
               onClick={() => setSearchDrawer(true)}
             />
@@ -96,7 +112,7 @@ const Header = () => {
                 <ShoppingCartOutlined
                   sx={{ fontSize: "1.8rem" }}
                   className="text-violet-700"
-                  // onClick={() => { Object.keys(cartState).length > 0 && navigate('/product_cart') }}
+                // onClick={() => { Object.keys(cartState).length > 0 && navigate('/product_cart') }}
                 />
               </Badge>
             </div>
@@ -111,6 +127,22 @@ const Header = () => {
                 <SearchBar />
               </div>
             </Drawer>
+
+
+            <Avatar
+              className="w-8 h-8 hover:cursor-pointer"
+              onClick={(event: any) => {
+                // menuControl(event);
+                // event.stopPropagation();
+              }}
+              style={{
+                // backgroundColor: user?.email ? stringToColor(user?.email) : "#881337",
+                backgroundColor: "#6d28d9",
+              }}
+            >
+              {/* {user.email ? user.email[0].toUpperCase() : <PersonIcon/>} */}
+              {<PersonIcon />}
+            </Avatar>
 
           </section>
         </Toolbar>

@@ -68,8 +68,6 @@ const SearchBar = () => {
     };
 
 
-       console.log(searchResults)
-
     return (
         <div className="md:w-4/5 w-full">
             <Autocomplete

@@ -99,7 +99,7 @@ const FilterTab = (props: FilterProps) => {
       const selectedValues = Object.fromEntries(
         Object.entries(updatedCheckboxStatus)
           .map(([key, values]) => [key, values && typeof values === 'object' ? Object.keys(values).filter(value => values[value]) : null])
-          .filter(([key, values]) => values && values.length > 0)
+          .filter(([_, values]) => values && values.length > 0)
       );
 
       const result = Object.keys(selectedValues).length > 0 ? selectedValues : null;
@@ -242,7 +242,7 @@ const ProductLists = () => {
     const timeoutId = setTimeout(() => {
       getAllfilteredProduct(page, ITEM_PER_PAGE, filterDict,
         (data) => {
-          console.log(data)
+          // console.log(data)
           dispatch(setProducts(data));
           setPage(data?.page);
           setTotalPage(data?.total_page);
