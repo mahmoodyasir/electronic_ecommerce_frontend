@@ -27,7 +27,7 @@ export const Context = createContext<GlobalState>({
     filterDict: {
         name: "",
         category: "",
-        key_features: [],
+        key_features: {},
         min_price: 0,
         max_price: MAX_PRICE_LIMIT
     },
@@ -47,7 +47,7 @@ export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({
     const [filterDict, setFilterDict] = useState<FilterTypes>({
         name: "",
         category: "",
-        key_features: [],
+        key_features: {},
         min_price: 0,
         max_price: MAX_PRICE_LIMIT
     })

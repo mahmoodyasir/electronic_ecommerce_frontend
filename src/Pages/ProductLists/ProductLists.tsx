@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { getFeature } from "../../ApiGateways/products";
+import { getAllfilteredProduct, getFeature } from "../../ApiGateways/products";
 import { Context } from "../../state/Provider";
-import { Button, Checkbox, Drawer, FormControlLabel, FormGroup, Slider, TextField, Typography } from "@mui/material";
-import { MAX_PRICE_LIMIT } from "../../utils/utils";
+import { Button, Checkbox, Drawer, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Pagination, Select, Slider, TextField, Typography } from "@mui/material";
+import { ITEM_PER_PAGE, MAX_PRICE_LIMIT } from "../../utils/utils";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ChevronRightRounded from "@mui/icons-material/ChevronRightRounded";
+import { useAppDispatch, useAppSelector } from "../../Redux/app/hooks";
+import { setProducts } from "../../Redux/features/productSlice";
+import ProductCard from "../../component/ProductCard/ProductCard";
 
 
 type FilterProps = {
@@ -13,27 +16,35 @@ type FilterProps = {
   setExpandedKeys: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   reset: boolean;
   setReset: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedFilters: React.Dispatch<React.SetStateAction<any>>;
   checkboxStatus: Record<string, Record<string, boolean>>;
-  setCheckboxStatus: React.Dispatch<React.SetStateAction<Record<string, Record<string, boolean>>>>
-  categoryName: any;
+  setCheckboxStatus: React.Dispatch<React.SetStateAction<Record<string, Record<string, boolean>>>>;
+  setCategoryName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 
 const FilterTab = (props: FilterProps) => {
-  const { filters, expandedKeys, setExpandedKeys, reset, setReset, setSelectedFilters, checkboxStatus, setCheckboxStatus, categoryName } = props;
+  const { filters, expandedKeys, setExpandedKeys, reset, setReset, checkboxStatus, setCheckboxStatus, setCategoryName } = props;
 
   const { filterDict, setFilterDict } = useContext(Context);
 
   const clearFilters = () => {
     setCheckboxStatus({});
-    setSelectedFilters(null);
     setReset(!reset);
+    setFilterDict({
+      name: "",
+      category: "",
+      key_features: {},
+      min_price: 0,
+      max_price: MAX_PRICE_LIMIT
+    });
+    setCategoryName("all");
   };
 
 
-  const handlePriceRangeChange = (event: Event, newValue: number | number[]) => {
-
+  const handlePriceRangeChange = (_event: Event, newValue: number | number[]) => {
+    if (Array.isArray(newValue)) {
+      setFilterDict((prev) => ({ ...prev, min_price: newValue[0], max_price: newValue[1] }))
+    }
   };
 
   const noNegative = (value: number) => {
@@ -44,13 +55,31 @@ const FilterTab = (props: FilterProps) => {
 
   const handleMinPriceInputChange = (value: number) => {
 
+    if (value > MAX_PRICE_LIMIT) {
+      value = MAX_PRICE_LIMIT;
+    }
 
+    setFilterDict({
+      ...filterDict,
+      min_price: value
+    })
 
   };
 
   const handleMaxPriceInputChange = (value: number) => {
 
+    if (value > MAX_PRICE_LIMIT) {
+      value = MAX_PRICE_LIMIT;
+    }
 
+    else if (value <= 0) {
+      value = 1;
+    }
+
+    setFilterDict({
+      ...filterDict,
+      max_price: value
+    })
 
   };
 
@@ -75,10 +104,7 @@ const FilterTab = (props: FilterProps) => {
 
       const result = Object.keys(selectedValues).length > 0 ? selectedValues : null;
 
-      // console.log(result);
-
-      setSelectedFilters(result);
-
+      setFilterDict((prev) => ({ ...prev, key_features: result }))
 
       return updatedCheckboxStatus;
     });
@@ -112,7 +138,7 @@ const FilterTab = (props: FilterProps) => {
           aria-labelledby="range-slider"
           min={0}
           max={MAX_PRICE_LIMIT}
-          step={100}
+          step={1000}
           style={{ maxWidth: "90%", marginLeft: "0.5rem", color: "black" }}
         />
 
@@ -189,29 +215,65 @@ const FilterTab = (props: FilterProps) => {
 
 const ProductLists = () => {
 
-  const [categoryName, setCategoryName] = useState<string>('');
+  const [debounceTimeout, setDebounceTimeout] = useState<number>();
+  const { filterDict, setFilterDict } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const all_products = useAppSelector((state) => state.productState);
+
+  const [categoryName, setCategoryName] = useState<string>('all');
   const [categoryType, setCategoryType] = useState(["all"]);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>({});
   const [checkboxStatus, setCheckboxStatus] = useState<Record<string, Record<string, boolean>>>({});
-  const [selectedFilters, setSelectedFilters] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
 
   const [openFilter, setOpenFilter] = useState(false);
   const [reset, setReset] = useState(false);
 
+
+  useEffect(() => {
+
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+
+    const timeoutId = setTimeout(() => {
+      getAllfilteredProduct(page, ITEM_PER_PAGE, filterDict,
+        (data) => {
+          console.log(data)
+          dispatch(setProducts(data));
+          setPage(data?.page);
+          setTotalPage(data?.total_page);
+        },
+        res => console.log(res)
+      )
+    }, 1000);
+
+    setDebounceTimeout(timeoutId);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+
+
+  }, [page, filterDict]);
+
+
   useEffect(() => {
 
     getFeature(
-      categoryName,
+      categoryName === "all" ? "" : categoryName,
       (data) => {
-        setCategoryType([...categoryType, ...(data?.data?.category?.map((item: any) => item?.name))])
+        setCategoryType([...new Set([...categoryType, ...(data?.data?.category?.map((item: any) => item?.name))])])
         setFilters(data?.data?.feature);
         setExpandedKeys(Object.keys(data?.data?.feature).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
       },
       res => console.log(res)
     )
 
-  }, []);
+  }, [categoryName]);
 
 
   return (
@@ -239,10 +301,9 @@ const ProductLists = () => {
             setExpandedKeys={setExpandedKeys}
             reset={reset}
             setReset={setReset}
-            setSelectedFilters={setSelectedFilters}
             checkboxStatus={checkboxStatus}
             setCheckboxStatus={setCheckboxStatus}
-            categoryName={categoryName}
+            setCategoryName={setCategoryName}
           />
         </Drawer>
 
@@ -253,19 +314,51 @@ const ProductLists = () => {
             setExpandedKeys={setExpandedKeys}
             reset={reset}
             setReset={setReset}
-            setSelectedFilters={setSelectedFilters}
             checkboxStatus={checkboxStatus}
             setCheckboxStatus={setCheckboxStatus}
-            categoryName={categoryName}
+            setCategoryName={setCategoryName}
           />
         </article>
 
-        {/* <article className="col-span-4 lg:col-span-3 flex flex-col gap-12 items-center">
+        <article className="col-span-4 lg:col-span-3 flex flex-col gap-12 items-center">
+
+          <section className="w-full">
+            <FormControl fullWidth>
+              <InputLabel id="select-autowidth-label-for-category">Select a Category</InputLabel>
+              <Select
+                className=" rounded-xl"
+                labelId="select-autowidth-label-for-category"
+                id="simple-select-autowidth"
+                value={categoryName}
+                onChange={(e) => {
+                  const catVal = e.target.value as string
+                  setCategoryName(catVal);
+                  setFilterDict({
+                    ...filterDict,
+                    category: catVal === "all" ? "" : catVal
+                  })
+                }}
+
+                label="Select a Category"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+
+                {
+                  categoryType?.map((item, index) => (
+                    <MenuItem key={index} value={item}>{item.toUpperCase()}</MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
+          </section>
+
           <section className="flex gap-6 flex-wrap justify-center" >
             {all_products?.data?.map((item: any, id: number) => (
               <ProductCard
                 key={id}
-                item={item}
+                product={item}
               />
             ))}
           </section>
@@ -281,7 +374,7 @@ const ProductLists = () => {
                 color: "white"
               }
             }} />
-        </article> */}
+        </article>
       </div>
     </div>
   )

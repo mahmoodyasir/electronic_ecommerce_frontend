@@ -1,15 +1,14 @@
 import { Autocomplete, IconButton, InputAdornment, MenuItem, Select, TextField } from "@mui/material";
-import TuneIcon from '@mui/icons-material/Tune';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useContext, useState } from "react";
 import { ITEM_PER_PAGE, MAX_PRICE_LIMIT, Product } from "../../../utils/utils";
 import { Context } from "../../../state/Provider";
-// import { getAllProduct } from "../../../ApiGateways/product";
 import { useNavigate } from "react-router-dom";
+import { getAllfilteredProduct } from "../../../ApiGateways/products";
 
 const SearchBar = () => {
-    const { filters, setFilters } = useContext(Context);
+    const { filterDict, setFilterDict } = useContext(Context);
     const navigate = useNavigate();
     const [searchResults, setSearchResults] = useState<Product[]>([]);
     const [filterBy, setFilterBy] = useState<string>('name')
@@ -21,7 +20,7 @@ const SearchBar = () => {
     const handleClearSearch = () => {
         setSearchQuery("");
         setSearchResults([]);
-        setFilters({ ...filters, name: "" });
+        setFilterDict({ ...filterDict, name: "", category: "" });
         setRetrieved(null);
     };
 
@@ -35,71 +34,67 @@ const SearchBar = () => {
         clearTimeout(debounceTimeout);
 
         let tempFilter = {
-            name: filterBy === "name" ? key as string : filters?.name || "",
-            category: filterBy === "category" ? key as string : filters?.category || "",
-            key_features: filters.key_features || [],
-            min_price: filters.min_price || 0,
-            max_price: filters.max_price || MAX_PRICE_LIMIT,
+            name: filterBy === "name" ? key as string : filterDict?.name || "",
+            category: filterBy === "category" ? key as string : filterDict?.category || "",
+            key_features: filterDict.key_features || {},
+            min_price: filterDict.min_price || 0,
+            max_price: filterDict.max_price || MAX_PRICE_LIMIT,
         };
 
         debounceTimeout = setTimeout(() => {
-            //   getAllProduct(1, ITEM_PER_PAGE, true, tempFilter,
-            //     (data) => {
-            //       if (key) {
-            //         setSearchResults([
-            //           {
-            //             _id: '',
-            //             name: String(key),
-            //             price: 0,
-            //             description: '',
-            //             images: [],
-            //             stock_quantity: 0,
-            //             category: '',
-            //             createdAt: '',
-            //             updatedAt: '',
-            //           },
-            //           ...data?.data?.data
-            //         ]);
+            getAllfilteredProduct(1, ITEM_PER_PAGE, tempFilter,
+                (data) => {
+                    if (key) {
+                        setSearchResults([
+                            {
+                                id: 0,
+                                name: String(key),
+                                price: 0,
+                                images_urls: [],
+                                category: '',
+                            },
+                            ...data?.data
+                        ]);
 
-            //         setFilters({ ...filters, name: key });
-            //       } else {
-            //         setSearchResults(data?.data?.data);
-            //         setFilters({ ...filters, name: "" });
-            //       }
-            //     },
-            //     res => console.log(res)
-            //   );
+                        setFilterDict({ ...filterDict, [filterBy]: key });
+                    } else {
+                        setSearchResults(data?.data?.data);
+                        setFilterDict({ ...filterDict, [filterBy]: "" });
+                    }
+                },
+                res => console.log(res)
+            );
         }, 500);
     };
 
 
-   
+       console.log(searchResults)
 
     return (
         <div className="md:w-4/5 w-full">
             <Autocomplete
-                value={retrieved}
-                options={searchResults}
+                value={retrieved || null}
+                options={searchResults || []}
                 fullWidth
                 freeSolo
                 inputValue={searchQuery}
                 onInputChange={(_event, newInputValue) => {
-                    setSearchQuery(newInputValue); 
+                    setSearchQuery(newInputValue);
                     searchWithDelay(newInputValue);
                 }}
                 onChange={(_event, newValue: any) => {
-                    setRetrieved(newValue?.name);
+                    console.log(newValue)
                     if (newValue?._id) {
                         navigate(`/product_details/${newValue._id}`);
                     }
                 }}
                 autoHighlight
-                getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
+                getOptionLabel={(option) => (typeof option === 'string' ? option : option.name + " " + option.category)}
                 renderOption={(props, option) => (
                     <li {...props}>
-                        <span className="flex gap-4 items-center">
-                            {option?._id ? (
-                                <img className="w-6 h-6" src={option?.images.length > 0 ? option.images[0] : ""} alt="" />
+                        <span style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                            {option?.id && option?.id !== 0 ? (
+                                <img style={{ width: "1.5rem", height: "1.5rem" }} src={option?.image_urls.length > 0 ? option.image_urls[0] : ""} alt="" />
                             ) : (
                                 <SearchIcon />
                             )}
@@ -142,7 +137,10 @@ const SearchBar = () => {
                                 <InputAdornment position="start">
                                     <Select
                                         variant="standard"
-                                        onChange={(e) => setFilterBy(e.target.value as string)}
+                                        onChange={(e) => {
+                                            handleClearSearch();
+                                            setFilterBy(e.target.value as string);
+                                        }}
                                         value={filterBy}
                                         disableUnderline
                                         sx={{ padding: 0, borderRadius: "8px" }}

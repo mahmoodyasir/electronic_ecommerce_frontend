@@ -1,4 +1,4 @@
-export const MAX_PRICE_LIMIT = 100000;
+export const MAX_PRICE_LIMIT = 1000000;
 export const ITEM_PER_PAGE = 12;
 
 
@@ -38,6 +38,7 @@ export type Product = {
     category: Category;
     description: string;
     image_urls: string[];
+    images?: [];
     isActive: boolean;
     isHighlighted: boolean;
     key_features: KeyFeature[];
@@ -49,10 +50,8 @@ export type Product = {
 export type FilterTypes = {
     name?: string;
     category?: string;
-    key_features?: {
-        name: string;
-        value: string[];
-    }[];
+    key_features?: Record<string, string[]>;
     min_price?: number;
     max_price?: number;
 };
+
