@@ -6,22 +6,29 @@ import PersonIcon from '@mui/icons-material/Person';
 import InfoIcon from '@mui/icons-material/Info';
 import SearchIcon from "@mui/icons-material/Search";
 import { AppBar, Avatar, Badge, Button, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
-import { ShoppingCartOutlined } from "@mui/icons-material";
+import { AccountCircle, ShoppingBasket, ShoppingCartOutlined } from "@mui/icons-material";
 import SearchBar from "../SearchBar/SearchBar";
 import { Context } from "../../../state/Provider";
 import { useNavigate } from "react-router-dom";
 import logo from '../../../static/images/cpu.png'
-import { useAppSelector } from "../../../Redux/app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../Redux/app/hooks";
 import { stringToColor } from "../../../utils/utils";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { setLogOut } from "../../../Redux/features/userSlice";
 
 
 const Header = () => {
 
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.userState.user);
   const cartState = useAppSelector((state) => state.cartState);
+  const isLoggedIn = useAppSelector((state) => state.userState.isLoggedIn);
 
   const { searchDrawer, setSearchDrawer, } = useContext(Context);
 
   const [isMenu, setIsMenu] = useState(false);
+  const [isProfile, setIsProfile] = useState(false);
 
   const navigate = useNavigate();
 
@@ -34,11 +41,32 @@ const Header = () => {
     return total + quantity;
   }, 0);
 
+  const userMenuControl = () => {
+    if (isLoggedIn) {
+      setIsProfile(true)
+    }
+    else {
+      navigate('/login')
+    }
+  }
+
+  const handleLogOut = () => {
+    localStorage.setItem('access-token', '');
+    localStorage.setItem('refresh-token', '');
+    dispatch(setLogOut())
+  }
+
   const tabBar = [
     { name: "HOME", icon: <AiOutlineHome />, url: "/" },
     { name: "PRODUCTS", icon: <FiShoppingBag />, url: "/products/all" },
     // { name: "PRODUCT MANAGEMENT", icon: <TfiWrite />, url: "/product_management" },
     { name: "ABOUT US", icon: <InfoIcon />, url: "/about_us" },
+  ];
+
+  const userBar = [
+    { name: "My Account", icon: <AccountCircle />, url: "/user_profile" },
+    { name: "My Orders", icon: <ShoppingBasket />, url: "/user_profile/my_orders" },
+    { name: "My Wishlist", icon: <FavoriteIcon />, url: "/user_profile/my_wishlist" },
   ];
 
   return (
@@ -67,17 +95,15 @@ const Header = () => {
 
             <Avatar
               className="w-10 h-10 hover:cursor-pointer"
-              onClick={(event: any) => {
-                // menuControl(event);
-                // event.stopPropagation();
+              onClick={(_event: any) => {
+                userMenuControl();
               }}
               style={{
-                // backgroundColor: user?.email ? stringToColor(user?.email) : "#881337",
-                backgroundColor: "#6d28d9",
+                backgroundColor: user?.email ? stringToColor(user?.email) : "#6d28d9",
               }}
             >
-              {/* {user.email ? user.email[0].toUpperCase() : <PersonIcon/>} */}
-              {<PersonIcon />}
+              {user?.image_url ? <img src={user?.image_url} /> : user.email ? user.email[0].toUpperCase() : <PersonIcon />}
+
             </Avatar>
 
           </section>
@@ -131,17 +157,15 @@ const Header = () => {
 
             <Avatar
               className="w-8 h-8 hover:cursor-pointer"
-              onClick={(event: any) => {
-                // menuControl(event);
-                // event.stopPropagation();
+              onClick={(_event: any) => {
+                userMenuControl();
               }}
               style={{
-                // backgroundColor: user?.email ? stringToColor(user?.email) : "#881337",
-                backgroundColor: "#6d28d9",
+                backgroundColor: user?.email ? stringToColor(user?.email) : "#6d28d9",
               }}
             >
-              {/* {user.email ? user.email[0].toUpperCase() : <PersonIcon/>} */}
-              {<PersonIcon />}
+
+              {user?.image_url ? <img src={user?.image_url} /> : user.email ? user.email[0].toUpperCase() : <PersonIcon />}
             </Avatar>
 
           </section>
@@ -183,6 +207,40 @@ const Header = () => {
           ))}
         </List>
       </Drawer>
+
+      <Drawer anchor="right" open={isProfile} onClose={() => setIsProfile(false)}>
+        <div style={{ width: "250px" }}>
+          <section style={{ height: "3.5rem", backgroundColor: "#6d28d9" }}>
+            <Typography style={{ color: "white", padding: "15px" }}>
+              {isLoggedIn ? user?.first_name + " " + user?.last_name : ""}
+            </Typography>
+          </section>
+          <List>
+
+            {userBar?.map((item, i) => (
+              <ListItemButton
+                onClick={() => [navigate(item?.url), setIsProfile(false)]}
+                key={i}
+              >
+                {/* HERE */}
+                <ListItemIcon>{item?.icon}</ListItemIcon>
+                <ListItemText>{item?.name}</ListItemText>
+              </ListItemButton>
+            ))}
+
+            <ListItemButton
+              onClick={() => [handleLogOut(), setIsProfile(false)]}
+
+            >
+              {/* HERE */}
+              <ListItemIcon><LogoutIcon /></ListItemIcon>
+              <ListItemText>Logout</ListItemText>
+            </ListItemButton>
+
+          </List>
+        </div>
+      </Drawer>
+
     </React.Fragment>
   )
 }

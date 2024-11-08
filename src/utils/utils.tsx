@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material";
+
 export const MAX_PRICE_LIMIT = 1000000;
 export const ITEM_PER_PAGE = 12;
 
@@ -20,20 +22,20 @@ type Category = {
     name: string;
 };
 
-type KeyFeature = {
+export type KeyFeature = {
     id: number;
     name: string;
     value: string[];
 };
 
-type Specification = {
+export type Specification = {
     id: number;
     category: string;
     name: string;
     value: string[];
 };
 
-type Inventory = {
+export type Inventory = {
     id: number;
     quantity: number;
     restock_alert: number;
@@ -47,7 +49,7 @@ export type Product = {
     discount_price?: number | null;
     product_code: string;
     brand: string;
-    category: Category;
+    category: string;
     description: string;
     image_urls: string[];
     images?: [];
@@ -67,3 +69,25 @@ export type FilterTypes = {
     max_price?: number;
 };
 
+
+export type User = {
+    id: number | string;
+    username: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string | null;
+    address: string | null;
+    image_url: string | null;
+    is_staff: boolean;
+    is_superuser: boolean;
+};
+
+
+export type snackBarDataType = {
+    isActive: boolean;
+    verticalPosition: any;
+    horizontalPosition: any;
+    message: string;
+    alertType: AlertColor;
+}

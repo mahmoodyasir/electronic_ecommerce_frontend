@@ -2,7 +2,7 @@ import TextParallaxContentComponent from "../TextParallaxComponent/TextParallaxC
 
 const Home = () => {
   return (
-    <div className='flex flex-col gap-12 mb-8'>
+    <div className='flex flex-col gap-12 mb-8 mt-4'>
       <TextParallaxContentComponent/>
     </div>
   )

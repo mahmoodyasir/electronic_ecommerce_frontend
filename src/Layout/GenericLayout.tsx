@@ -6,10 +6,8 @@ const GenericLayout = () => {
   return (
     <main className="flex flex-col min-h-screen">
 
-      <Header/>
+      <Header />
 
-      <div className="mb-4"></div>
-      
       <section className="flex-grow">
         <Outlet />
       </section>

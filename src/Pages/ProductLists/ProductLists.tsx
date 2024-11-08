@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { getAllfilteredProduct, getFeature } from "../../ApiGateways/products";
 import { Context } from "../../state/Provider";
-import { Button, Checkbox, Drawer, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Pagination, Select, Slider, TextField, Typography } from "@mui/material";
+import { Button, Checkbox, Collapse, Drawer, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Pagination, Select, Slider, TextField, Typography } from "@mui/material";
 import { ITEM_PER_PAGE, MAX_PRICE_LIMIT } from "../../utils/utils";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ChevronRightRounded from "@mui/icons-material/ChevronRightRounded";
@@ -166,46 +166,58 @@ const FilterTab = (props: FilterProps) => {
       </article>
 
 
-      {
-        Object.entries(filters).map(([key, values], index) => (
-          <article key={index} style={{ padding: "0.5rem 0 0.5rem 1rem" }} >
-            <section
-              onClick={() => setExpandedKeys((prev) => ({ ...prev, [key]: !prev[key] }))}
-              style={{ cursor: "pointer", display: "flex", flexFlow: "row nowrap", alignItems: "center", gap: "0 0.25rem", padding: "0.25rem 0" }}
+      {Object.entries(filters).map(([key, values], index) => (
+        <article key={index} style={{ marginBottom: "1rem" }}>
+          {/* Filter Section Header */}
+          <section
+            onClick={() => setExpandedKeys((prev) => ({ ...prev, [key]: !prev[key] }))}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "0.5rem",
+              padding: "0.5rem 0.5rem",
+            }}
+          >
+            {expandedKeys[key] ? (
+              <ExpandMore style={{ marginRight: "0.25rem", color: "#888" }} />
+            ) : (
+              <ChevronRightRounded style={{ marginRight: "0.25rem", color: "#888" }} />
+            )}
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              {key.charAt(0).toUpperCase() + key.slice(1)}
+            </Typography>
+          </section>
+
+          {/* Filter Options */}
+          <Collapse in={expandedKeys[key]} timeout="auto" unmountOnExit>
+            <FormGroup
+              sx={{
+                display: "flex",
+                flexWrap: "wrap", 
+                gap: "8px",
+                maxWidth: "100%",
+                paddingLeft: "2rem"
+              }}
             >
-              {
-                expandedKeys[key] ?
-                  <ExpandMore style={{ marginRight: "0.25rem" }} /> :
-                  <ChevronRightRounded style={{ marginRight: "0.25rem" }} />
-              }
-              <Typography variant="h5" sx={{ textTransform: "none" }}>
-                {key.split(" ").map((k) => k ? k[0].toUpperCase() + k.slice(1) : "").join(" ")}
-              </Typography>
-            </section>
-            <FormGroup style={{ display: expandedKeys[key] ? "flex" : "none", overflowY: 'auto' }}>
-              {
-                values.map((value, index) => (
-                  <FormControlLabel
-                    key={index}
-                    control={
-                      <Checkbox
-                        checked={checkboxStatus[key]?.[value] || false}
-                        onChange={() => handleChange(key, value)}
-                      />
-                    }
-                    label={
-                      <Typography variant="subtitle1" sx={{ textTransform: "none" }}>
-                        {value.split(" ").map((k) => k ? k[0].toUpperCase() + k.slice(1) : "").join(" ")}
-                      </Typography>
-                    }
-                    sx={{ marginLeft: "0.5rem" }}
-                  />
-                ))
-              }
+              {values.map((value, idx) => (
+                <FormControlLabel
+                  key={idx}
+                  control={
+                    <Checkbox
+                      checked={checkboxStatus[key]?.[value] || false}
+                      onChange={() => handleChange(key, value)}
+                      size="small"
+                    />
+                  }
+                  label={value}
+                  sx={{ flex: "1 0 45%" }}
+                />
+              ))}
             </FormGroup>
-          </article>
-        ))
-      }
+          </Collapse>
+        </article>
+      ))}
 
     </section>
   )

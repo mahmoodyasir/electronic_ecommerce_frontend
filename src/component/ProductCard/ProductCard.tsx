@@ -3,12 +3,14 @@ import { AddShoppingCart } from "@mui/icons-material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState } from "react";
 import { Product } from "../../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
     product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+    const navigate = useNavigate();
     const [isFavorited, setIsFavorited] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -88,7 +90,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         color="secondary"
                         className="ml-2 flex-1"
                         onClick={() => {
-                            console.log('Navigate to details page...');
+                            navigate(`/product_details/${product?.id}`);
                         }}
                     >
                         Details
