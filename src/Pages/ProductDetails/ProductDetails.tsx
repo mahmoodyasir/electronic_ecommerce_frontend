@@ -5,15 +5,18 @@ import { MAX_PRICE_LIMIT, Product, Specification } from "../../utils/utils";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Avatar, Badge, Box, Button, ButtonGroup, Chip, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../Redux/app/hooks";
+import { addToCart, decreaseCartItem, increaseCartItem } from "../../Redux/features/productCartSlice";
 
 
 const ProductDetails = () => {
 
     const { id } = useParams();
+    const myCart = useAppSelector((state) => state.cartState);
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [productData, setProductData] = useState<Product>();
     const [mainImage, setMainImage] = useState<string>("");
-    const [quantity, setQuantity] = useState<number>(1);
     const [relatedProduct, setRelatedProduct] = useState<Product[]>();
 
 
@@ -53,13 +56,6 @@ const ProductDetails = () => {
         setMainImage(image);
     };
 
-    const handleIncrease = () => {
-        setQuantity(prev => prev + 1);
-    };
-
-    const handleDecrease = () => {
-        setQuantity(prev => (prev > 1 ? prev - 1 : 1));
-    };
 
     const groupSpecificationsByCategory = (specs: Specification[]) => {
         const groupedSpecs: { [key: string]: Specification[] } = {};
@@ -74,6 +70,25 @@ const ProductDetails = () => {
 
 
     const groupedSpecs = groupSpecificationsByCategory(productData.specifications);
+
+
+    const handleAddToCart = (product: any, quantity: number) => {
+        dispatch(addToCart({ product, quantity }));
+    };
+
+    const handleIncreaseQuantity = (productId: string | number, product: any, quantity: number) => {
+        if (myCart[String(productId)]?.quantity < 1 || myCart[String(productId)]?.quantity === undefined) {
+            dispatch(addToCart({ product, quantity }));
+        }
+        else {
+            dispatch(increaseCartItem(String(productId)));
+        }
+
+    };
+
+    const handleDecreaseQuantity = (productId: string | number) => {
+        dispatch(decreaseCartItem(String(productId)));
+    };
 
     return (
         <div className="container mx-auto p-6">
@@ -156,11 +171,21 @@ const ProductDetails = () => {
                         {/* Quantity and Add to Cart */}
                         <div className="flex items-center space-x-4">
                             <ButtonGroup className=" border-black border-[1px]" color="secondary" aria-label="Medium-sized button group">
-                                <Button className=' border-l-0 border-t-0 border-b-0 border-r-[1px] border-black text-red-500 hover:bg-red-400 hover:text-white'><RemoveIcon /></Button>
-                                <Button className='border-0 text-black font-bold' disabled>1</Button>
-                                <Button className='border-l-[1px] border-t-0 border-b-0 border-r-0 border-black text-green-500 hover:bg-green-400 hover:text-white'><AddIcon /></Button>
+                                <Button
+                                    onClick={() => handleDecreaseQuantity(productData?.id)}
+                                    className=' border-l-0 border-t-0 border-b-0 border-r-[1px] border-black text-red-500 hover:bg-red-400 hover:text-white'>
+                                    <RemoveIcon />
+                                </Button>
+                                <Button className='border-0 text-black font-bold' disabled>
+                                    {myCart[String(id)]?.quantity || 0}
+                                </Button>
+                                <Button
+                                    onClick={() => handleIncreaseQuantity(Number(productData?.id), productData, 1)}
+                                    className='border-l-[1px] border-t-0 border-b-0 border-r-0 border-black text-green-500 hover:bg-green-400 hover:text-white'>
+                                    <AddIcon />
+                                </Button>
                             </ButtonGroup>
-                            <Button variant="contained" color="primary">
+                            <Button onClick={() => { handleAddToCart(productData, 1) }} className="px-4 py-2 bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition duration-200">
                                 Add to Cart
                             </Button>
                         </div>

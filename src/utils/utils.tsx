@@ -43,7 +43,7 @@ export type Inventory = {
 };
 
 export type Product = {
-    id: number;
+    id: number | string;
     name: string;
     price: number;
     discount_price?: number | null;

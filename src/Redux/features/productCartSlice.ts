@@ -10,7 +10,7 @@ interface CartItem {
 };
 
 export interface CartState {
-    [productId: string]: CartItem;
+    [productId: string | number]: CartItem;
 };
 
 const initialState: CartState = {};

@@ -4,6 +4,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState } from "react";
 import { Product } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../Redux/app/hooks";
+import { addToCart } from "../../Redux/features/productCartSlice";
 
 interface ProductCardProps {
     product: Product;
@@ -11,6 +13,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [isFavorited, setIsFavorited] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -28,6 +31,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     const handleMouseLeave = () => {
         setCurrentImageIndex(0);
+    };
+
+    const handleAddToCart = (product: any, quantity: number) => {
+        dispatch(addToCart({ product, quantity }));
     };
 
     return (
@@ -78,9 +85,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {/* Action Buttons */}
                 <div className="flex justify-between items-center mt-4">
                     <Button
-                        variant="contained"
-                        color="primary"
-                        className="flex-1 text-nowrap"
+                        onClick={() => handleAddToCart(product, 1)}
+                        className="flex-1 text-nowrap px-4 py-2 bg-indigo-600 text-white text-sm hover:bg-indigo-800 transition duration-200"
                         startIcon={<AddShoppingCart />}
                     >
                         Add to Cart
