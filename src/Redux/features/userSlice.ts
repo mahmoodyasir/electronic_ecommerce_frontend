@@ -16,6 +16,8 @@ const initialState: UserState = {
         first_name: '',
         last_name: '',
         phone_number: '',
+        countryCode: '',
+        countryInitial: 'BD',
         address: '',
         image_url: '',
         is_staff: false,
@@ -37,6 +39,8 @@ const userSlice = createSlice({
             state.user.first_name = data.first_name;
             state.user.last_name = data.last_name;
             state.user.phone_number = data.phone_number;
+            state.user.countryCode = data.countryCode;
+            state.user.countryInitial = data.countryInitial;
             state.user.address = data.address;
             state.user.image_url = data.image_url;
             state.user.is_staff = data.is_staff;

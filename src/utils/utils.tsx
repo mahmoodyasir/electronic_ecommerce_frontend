@@ -15,6 +15,10 @@ export const stringToColor = (str: string): string => {
     return "#" + "0".repeat(6 - color.length) + color;
 };
 
+export const convertToTitle = (str: string) => {
+    const result = str.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return result;
+}
 
 
 type Category = {
@@ -69,6 +73,7 @@ export type FilterTypes = {
     max_price?: number;
 };
 
+export type CountryCode = 'BD' | 'CA';
 
 export type User = {
     id: number | string;
@@ -77,6 +82,8 @@ export type User = {
     first_name: string;
     last_name: string;
     phone_number: string | null;
+    countryCode: string | null;
+    countryInitial: CountryCode | undefined;
     address: string | null;
     image_url: string | null;
     is_staff: boolean;

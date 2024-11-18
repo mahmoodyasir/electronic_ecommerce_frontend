@@ -149,11 +149,14 @@ const ProductDetails = () => {
                         {/* Pricing Section */}
                         <div className="flex items-baseline space-x-4">
                             <span className="text-3xl font-bold text-indigo-600">
-                                ${productData.discount_price}
+                                ${productData?.discount_price && productData?.discount_price > 0 ? productData?.discount_price : productData?.price}
                             </span>
-                            <span className="text-xl line-through text-gray-500">
-                                ${productData.price}
-                            </span>
+                            {
+                                productData?.discount_price && productData?.discount_price > 0 &&
+                                <span className="text-xl line-through text-gray-500">
+                                    ${productData.price}
+                                </span>
+                            }
                         </div>
 
                         {/* Key Features */}
@@ -193,6 +196,8 @@ const ProductDetails = () => {
                     </div>
                 </div>
             </div>
+
+            <Divider className="mt-4 mb-2 h-6"/>
 
             {/* Specifications Section */}
             <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">

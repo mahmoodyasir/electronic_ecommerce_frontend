@@ -9,6 +9,9 @@ import UserRoute from "./UserRoute";
 import UserLayout from "../Layout/UserLayout";
 import UserProfile from "../Pages/UserContents/UserProfile/UserProfile";
 import ProductDetails from "../Pages/ProductDetails/ProductDetails";
+import ProductCart from "../Pages/ProductCart/ProductCart";
+import MyOrders from "../Pages/UserContents/MyOrders/MyOrders";
+import MyWishList from "../Pages/UserContents/MyWishList/MyWishList";
 
 const router = createBrowserRouter([
     {
@@ -33,7 +36,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/product_details/:id",
-                element: <ProductDetails/>
+                element: <ProductDetails />
+            },
+            {
+                path: "/product_cart",
+                element: <ProductCart />
             },
             {
                 path: "/user_profile",
@@ -46,6 +53,14 @@ const router = createBrowserRouter([
                     {
                         path: "/user_profile",
                         element: <UserProfile />
+                    },
+                    {
+                        path: "/user_profile/my_orders",
+                        element: <MyOrders />
+                    },
+                    {
+                        path: "/user_profile/my_wishlist",
+                        element: <MyWishList />
                     },
                 ]
             }

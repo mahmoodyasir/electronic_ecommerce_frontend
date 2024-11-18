@@ -22,7 +22,8 @@ const cartSlice = createSlice({
         addToCart: (state, action: PayloadAction<{ product: Product; quantity: number }>) => {
             const { product, quantity } = action.payload;
             const productId = product.id;
-            const total_price = product.price * quantity;
+            // const total_price = product.price * quantity;
+            const total_price = product?.discount_price && product?.discount_price > 0 ? product?.discount_price * quantity : product.price * quantity
 
             if (state[productId]) {
                 state[productId].quantity += quantity;
@@ -41,7 +42,10 @@ const cartSlice = createSlice({
             const productId = action.payload;
             if (state[productId] && state[productId].quantity < state[productId].product.inventory_product?.quantity) {
                 state[productId].quantity += 1;
-                state[productId].total_price += state[productId].product.price;
+                
+                const calculated_price = state[productId].product.discount_price && Number(state[productId].product.discount_price) > 0 ? Number(state[productId].product.discount_price) : Number(state[productId].product.price)
+
+                state[productId].total_price += calculated_price;
             }
         },
 
@@ -49,7 +53,9 @@ const cartSlice = createSlice({
             const productId = action.payload;
             if (state[productId]) {
                 state[productId].quantity -= 1;
-                state[productId].total_price -= state[productId].product.price;
+
+                const calculated_price = state[productId].product.discount_price && Number(state[productId].product.discount_price) > 0 ? Number(state[productId].product.discount_price) : Number(state[productId].product.price)
+                state[productId].total_price -= calculated_price;
 
                 if (state[productId].quantity < 1) {
                     delete state[productId];

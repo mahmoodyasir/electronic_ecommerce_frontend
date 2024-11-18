@@ -87,3 +87,25 @@ export const refreahAccessToken = async (body: any, handleSuccess: (data?: any) 
         handleError(err);
     }
 }
+
+
+
+export const updateUser = async (body: any, handleSuccess: (data?: any) => void, handleError: (err?: any) => void) => {
+    try {
+        const response = await fetch(`${url}/api/user/update_user`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access-token')}`,
+            },
+            body,
+        })
+
+        const jsonData = await response.json();
+
+        if (response.status === 200) handleSuccess(jsonData);
+        else handleError(jsonData);
+    } catch (err) {
+        handleError(err);
+    }
+}
+

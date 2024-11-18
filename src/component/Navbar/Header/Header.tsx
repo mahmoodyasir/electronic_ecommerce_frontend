@@ -138,7 +138,7 @@ const Header = () => {
                 <ShoppingCartOutlined
                   sx={{ fontSize: "1.8rem" }}
                   className="text-violet-700"
-                // onClick={() => { Object.keys(cartState).length > 0 && navigate('/product_cart') }}
+                  onClick={() => { Object.keys(cartState).length > 0 && navigate('/product_cart') }}
                 />
               </Badge>
             </div>
@@ -156,7 +156,7 @@ const Header = () => {
 
 
             <Avatar
-              className="w-8 h-8 hover:cursor-pointer"
+              className="w-8 h-8 hover:cursor-pointer ml-2"
               onClick={(_event: any) => {
                 userMenuControl();
               }}
