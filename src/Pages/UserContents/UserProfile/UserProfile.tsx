@@ -1,23 +1,11 @@
 import { useState } from "react";
-import { TextField, Button, Typography, Avatar, IconButton, InputAdornment } from "@mui/material";
+import { Button, Typography, Avatar, IconButton } from "@mui/material";
 import { Cancel, PhotoCamera } from "@mui/icons-material";
-import PhoneInput from "react-phone-number-input";
 import { useAppDispatch, useAppSelector } from "../../../Redux/app/hooks";
-import { CountryCode } from "../../../utils/utils";
+import { UserData } from "../../../utils/utils";
 import { updateUser } from "../../../ApiGateways/users";
 import { setUserState } from "../../../Redux/features/userSlice";
-
-
-type UserData = {
-    email: string;
-    first_name: string;
-    last_name: string;
-    phone_number: string;
-    countryCode: string;
-    countryInitial: CountryCode;
-    address: string;
-    image_url: string | null;
-}
+import BasicInfo from "../../../component/BasicInfo/BasicInfo";
 
 
 const UserProfile = () => {
@@ -39,12 +27,12 @@ const UserProfile = () => {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserData({
-            ...userData,
-            [e.target.name]: e.target.value,
-        });
-    };
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     setUserData({
+    //         ...userData,
+    //         [e.target.name]: e.target.value,
+    //     });
+    // };
 
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,93 +125,7 @@ const UserProfile = () => {
                         }
                     </div>
 
-                    <section className="flex gap-2 flex-col gap-y-3 md:flex-row">
-                        {/* First Name */}
-                        <TextField
-                            fullWidth
-                            label="First Name"
-                            name="first_name"
-                            value={userData.first_name}
-                            onChange={handleChange}
-                            variant="outlined"
-                            required
-                        />
-
-                        {/* Last Name */}
-                        <TextField
-                            fullWidth
-                            label="Last Name"
-                            name="last_name"
-                            value={userData.last_name}
-                            onChange={handleChange}
-                            variant="outlined"
-                            required
-                        />
-                    </section>
-
-                    <section className="flex gap-2 flex-col space-y-4 md:space-y-0 md:flex-row">
-                        {/* Email */}
-                        <TextField
-                            disabled
-                            fullWidth
-                            label="Email"
-                            name="email"
-                            value={userData.email}
-                            // onChange={handleChange}
-                            type="email"
-                            variant="outlined"
-                            required
-                        />
-
-                        {/* Phone Number */}
-                        <TextField
-                            label="Phone Number"
-                            variant="outlined"
-                            fullWidth
-                            name="phone_number"
-                            value={userData.phone_number}
-                            onChange={handleChange}
-                            className="mb-4"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <PhoneInput
-                                            international
-                                            defaultCountry={userData?.countryInitial}
-                                            value={userData?.countryCode}
-                                            onChange={(value) => {
-                                                console.log(value)
-                                                // setCountryCode(value as string);
-                                                setUserData({ ...userData, countryCode: value as string })
-                                            }}
-                                            onCountryChange={(country) => {
-                                                console.log(country)
-                                            }}
-                                            className="w-full"
-                                        />
-
-                                        <span>{userData?.countryCode}</span>
-                                    </InputAdornment>
-
-                                ),
-                            }}
-                        />
-
-                    </section>
-
-
-                    {/* Address */}
-                    <TextField
-                        fullWidth
-                        label="Address"
-                        name="address"
-                        multiline
-                        rows={4}
-                        value={userData.address}
-                        onChange={handleChange}
-                        variant="outlined"
-                        required
-                    />
+                   <BasicInfo userData={userData} setUserData={setUserData} />
 
                     {/* Submit Button */}
                     <Button

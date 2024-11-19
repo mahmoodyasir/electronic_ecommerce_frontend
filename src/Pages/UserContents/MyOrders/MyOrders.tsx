@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle, Cancel } from "@mui/icons-material";
 import { Card, CardContent, Chip, Divider, Grid, Typography, Button } from "@mui/material";
 import { getCustomersOrder } from "../../../ApiGateways/orders";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 const OrderCard = ({ order }: any) => {
   const { order_ID, items, total, status, payment_complete, shipping_address } = order;
@@ -91,6 +91,7 @@ const PaginatedOrders = ({ orders }: any) => {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
 
   return (
     <div>

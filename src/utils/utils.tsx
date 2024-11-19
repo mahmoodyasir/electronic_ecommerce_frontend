@@ -98,3 +98,15 @@ export type snackBarDataType = {
     message: string;
     alertType: AlertColor;
 }
+
+
+export type UserData = {
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    countryCode: string;
+    countryInitial: CountryCode;
+    address: string;
+    image_url: string | null;
+}
