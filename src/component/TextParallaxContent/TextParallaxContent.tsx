@@ -12,8 +12,8 @@ const TextParallaxContent = ({
     children,
   }: {
     imgUrl: string;
-    subheading: string;
-    heading: string;
+    subheading: string | ReactNode;
+    heading: string | ReactNode;
     children: ReactNode;
   }) => {
     return (
@@ -23,7 +23,7 @@ const TextParallaxContent = ({
           paddingRight: IMG_PADDING,
         }}
       >
-        <div className="relative h-[150vh]">
+        <div className="relative">
           <StickyImage imgUrl={imgUrl} />
           <OverlayCopy heading={heading} subheading={subheading} />
         </div>

@@ -1,12 +1,12 @@
-import { useRef } from "react";
+import { ReactNode, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const OverlayCopy = ({
     subheading,
     heading,
 }: {
-    subheading: string;
-    heading: string;
+    subheading: string | ReactNode;
+    heading: string | ReactNode;
 }) => {
     const targetRef = useRef(null);
     const { scrollYProgress } = useScroll({

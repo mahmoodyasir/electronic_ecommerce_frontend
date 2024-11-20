@@ -4,22 +4,25 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState } from "react";
 import { Product } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../Redux/app/hooks";
+import { useAppDispatch, useAppSelector } from "../../Redux/app/hooks";
 import { addToCart } from "../../Redux/features/productCartSlice";
+import { addToWishlist } from "../../Redux/features/wishlistSlice";
 
 interface ProductCardProps {
     product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+    const wishlist = useAppSelector((state) => state.wishlistState.items);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [isFavorited, setIsFavorited] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const isFavorited = wishlist.some((item) => item.id === product.id);
 
 
     const handleFavoriteToggle = () => {
-        setIsFavorited(!isFavorited);
+        dispatch(addToWishlist(product));
     };
 
     const handleMouseEnter = () => {
@@ -77,9 +80,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 </Typography>
 
                 {/* Product Price */}
-                <Typography variant="subtitle1" className="text-center text-blue-500 font-semibold mt-2">
-                    ${product.price}
-                </Typography>
+                <div>
+                    <Typography variant="subtitle1" className="text-center text-blue-500 font-semibold mt-2">
+                        ${product?.discount_price && product?.discount_price > 0 ? product?.discount_price : product?.price}
+                    </Typography>
+
+                    {
+                        product?.discount_price && product?.discount_price > 0 &&
+                        <Typography className="line-through text-red-500 text-center">
+                            ${product.price}
+                        </Typography>
+                    }
+                </div>
 
 
                 {/* Action Buttons */}

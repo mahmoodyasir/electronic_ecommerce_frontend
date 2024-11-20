@@ -1,13 +1,29 @@
 import { FiArrowUpRight } from "react-icons/fi";
 import TextParallaxContent from "../../component/TextParallaxContent/TextParallaxContent";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import TypewriterText from "../../component/TypewriterText/TypewriterText";
 
 const TextParallaxContentComponent = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white">
       <TextParallaxContent
-        imgUrl="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        subheading="Collaborate"
-        heading="Built for all of us."
+        imgUrl="https://images.unsplash.com/photo-1680585499966-d73b4f54f127?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        subheading=<>
+          <div className="bg-white p-5 rounded-xl hover:bg-indigo-800">
+            <Button
+              variant="contained"
+              className="bg-indigo-600 hover:bg-white hover:text-black text-white px-6 py-3 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300"
+              onClick={() => navigate("/products/all")}
+            >
+              Browse Products
+            </Button>
+          </div>
+        </>
+        heading=<TypewriterText text="Your go-to shop for smart living" speed={80}/>
       >
         <ExampleContent />
       </TextParallaxContent>

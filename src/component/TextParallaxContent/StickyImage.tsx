@@ -19,7 +19,7 @@ const StickyImage = ({ imgUrl }: { imgUrl: string }) => {
           backgroundImage: `url(${imgUrl})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          height: `calc(100vh - ${IMG_PADDING * 2}px)`,
+          height: `calc(88vh - ${IMG_PADDING * 2}px)`,
           top: IMG_PADDING,
           scale,
         }}
