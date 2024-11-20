@@ -54,6 +54,7 @@ const Header = () => {
     localStorage.setItem('access-token', '');
     localStorage.setItem('refresh-token', '');
     dispatch(setLogOut())
+    navigate('/login')
   }
 
   const tabBar = [

@@ -12,6 +12,7 @@ import ProductDetails from "../Pages/ProductDetails/ProductDetails";
 import ProductCart from "../Pages/ProductCart/ProductCart";
 import MyOrders from "../Pages/UserContents/MyOrders/MyOrders";
 import MyWishList from "../Pages/UserContents/MyWishList/MyWishList";
+import CheckoutPage from "../Pages/Orders/CheckoutPage";
 
 const router = createBrowserRouter([
     {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
             {
                 path: "/product_cart",
                 element: <ProductCart />
+            },
+            {
+                path: "/checkout",
+                element: <UserRoute><CheckoutPage /></UserRoute>
             },
             {
                 path: "/user_profile",

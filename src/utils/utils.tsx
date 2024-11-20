@@ -108,5 +108,5 @@ export type UserData = {
     countryCode: string;
     countryInitial: CountryCode;
     address: string;
-    image_url: string | null;
+    image_url?: string | null;
 }
