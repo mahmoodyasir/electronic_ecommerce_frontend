@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { getAllfilteredProduct, getFeature } from "../../ApiGateways/products";
 import { Context } from "../../state/Provider";
-import { Button, Checkbox, Collapse, Drawer, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Pagination, Select, Slider, TextField, Typography } from "@mui/material";
+import { Backdrop, Button, Checkbox, CircularProgress, Collapse, Drawer, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Pagination, Select, Slider, TextField, Typography } from "@mui/material";
 import { ITEM_PER_PAGE, MAX_PRICE_LIMIT } from "../../utils/utils";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ChevronRightRounded from "@mui/icons-material/ChevronRightRounded";
 import { useAppDispatch, useAppSelector } from "../../Redux/app/hooks";
 import { setProducts } from "../../Redux/features/productSlice";
 import ProductCard from "../../component/ProductCard/ProductCard";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 type FilterProps = {
@@ -194,7 +195,7 @@ const FilterTab = (props: FilterProps) => {
             <FormGroup
               sx={{
                 display: "flex",
-                flexWrap: "wrap", 
+                flexWrap: "wrap",
                 gap: "8px",
                 maxWidth: "100%",
                 paddingLeft: "2rem"
@@ -227,25 +228,44 @@ const FilterTab = (props: FilterProps) => {
 
 const ProductLists = () => {
 
+  const { category } = useParams();
+  const navigate = useNavigate();
   const [debounceTimeout, setDebounceTimeout] = useState<number>();
   const { filterDict, setFilterDict } = useContext(Context);
   const dispatch = useAppDispatch();
   const all_products = useAppSelector((state) => state.productState);
 
-  const [categoryName, setCategoryName] = useState<string>('all');
+  const [categoryName, setCategoryName] = useState<string>(category as string);
   const [categoryType, setCategoryType] = useState(["all"]);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>({});
   const [checkboxStatus, setCheckboxStatus] = useState<Record<string, Record<string, boolean>>>({});
 
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(0);
 
-  const [openFilter, setOpenFilter] = useState(false);
-  const [reset, setReset] = useState(false);
+  const [openFilter, setOpenFilter] = useState<boolean>(false);
+  const [reset, setReset] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
   useEffect(() => {
+    navigate(`/products/${categoryName}`)
+  }, [categoryName])
+
+  useEffect(() => {
+    if (category === "all") {
+      setFilterDict({ ...filterDict, category: "" });
+    }
+    else {
+      setFilterDict({ ...filterDict, category: category });
+    }
+  }, [category])
+
+
+  useEffect(() => {
+
+    setIsLoading(true);
 
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
@@ -258,8 +278,12 @@ const ProductLists = () => {
           dispatch(setProducts(data));
           setPage(data?.page);
           setTotalPage(data?.total_page);
+          setIsLoading(false);
         },
-        res => console.log(res)
+        res => {
+          console.log(res);
+          setIsLoading(false);
+        }
       )
     }, 1000);
 
@@ -286,6 +310,7 @@ const ProductLists = () => {
     )
 
   }, [categoryName]);
+
 
 
   return (
@@ -348,7 +373,7 @@ const ProductLists = () => {
                   setFilterDict({
                     ...filterDict,
                     category: catVal === "all" ? "" : catVal
-                  })
+                  });
                 }}
 
                 label="Select a Category"
@@ -366,26 +391,75 @@ const ProductLists = () => {
             </FormControl>
           </section>
 
-          <section className="flex gap-6 flex-wrap justify-center" >
-            {all_products?.data?.map((item: any, id: number) => (
-              <ProductCard
-                key={id}
-                product={item}
-              />
-            ))}
-          </section>
+          {
+            isLoading ?
+              <>
+                <Backdrop
+                  sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                  open={isLoading}
+                  onClick={() => { }}
+                >
+                  <div className="flex flex-col items-center gap-4">
+                    <CircularProgress className=" text-violet-900" />
+                    <Typography className=" text-center">Loading .....</Typography>
+                  </div>
 
-          <Pagination count={totalPage} page={page} onChange={(_event: any, value: number) => { setPage(value) }}
-            sx={{
-              "li > button": {
-                backgroundColor: "#73555f",
-                color: "white"
-              },
-              "li > button.Mui-selected": {
-                backgroundColor: "#3da15a",
-                color: "white"
-              }
-            }} />
+                </Backdrop>
+              </>
+              :
+              <>
+
+                {
+                  all_products?.data?.length > 0 ?
+
+                    <>
+                      <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6" >
+                        {all_products?.data?.map((item: any, id: number) => (
+                          <ProductCard
+                            key={id}
+                            product={item}
+                          />
+                        ))}
+                      </section>
+
+                      <Pagination count={totalPage} page={page} onChange={(_event: any, value: number) => { setPage(value) }}
+                        sx={{
+                          "li > button": {
+                            backgroundColor: "#73555f",
+                            color: "white"
+                          },
+                          "li > button.Mui-selected": {
+                            backgroundColor: "#3da15a",
+                            color: "white"
+                          }
+                        }} />
+                    </>
+                    :
+                    <>
+                      <div className="flex flex-col items-center justify-center w-full h-full rounded-xl bg-gradient-to-b from-gray-100 to-gray-300 p-6">
+                        <Typography variant="h4" className="font-bold text-gray-700 mb-4">
+                          No Product Found
+                        </Typography>
+                        <Typography variant="subtitle1" className="text-gray-500 text-center mb-6">
+                          Explore our other category and start adding !
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          className="bg-indigo-600 hover:bg-indigo-800 text-white px-6 py-3 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300"
+                          onClick={() => setCategoryName("all")}
+                        >
+                          See All Products
+                        </Button>
+                      </div>
+
+                    </>
+                }
+
+              </>
+          }
+
+
+
         </article>
       </div>
     </div>
