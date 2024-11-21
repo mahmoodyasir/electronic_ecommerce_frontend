@@ -81,9 +81,8 @@ const SearchBar = () => {
                     searchWithDelay(newInputValue);
                 }}
                 onChange={(_event, newValue: any) => {
-                    console.log(newValue)
-                    if (newValue?._id) {
-                        navigate(`/product_details/${newValue._id}`);
+                    if (newValue?._id || newValue?.id) {
+                        navigate(`/product_details/${newValue._id || newValue?.id}`);
                     }
                 }}
                 autoHighlight

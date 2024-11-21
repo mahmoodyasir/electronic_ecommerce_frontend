@@ -1,6 +1,6 @@
 import { FiArrowUpRight } from "react-icons/fi";
 import TextParallaxContent from "../../component/TextParallaxContent/TextParallaxContent";
-import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import TypewriterText from "../../component/TypewriterText/TypewriterText";
 import { useEffect, useState } from "react";

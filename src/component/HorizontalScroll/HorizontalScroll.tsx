@@ -75,9 +75,13 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ products, heading =
         <div className="relative mt-12 mb-8 rounded-lg bg-gradient-to-r from-blue-500 to-teal-400 shadow-xl">
             {/* Heading */}
             <div>
-                <div className="absolute mt-[-1.3rem] md:mt-[-1.8rem] lg:mt-[-2.3rem] left-1/2 md:left-[12rem] lg:left-[15rem] transform -translate-x-1/2 bg-white px-8 lg:px-16 py-3 text-center shadow-lg rounded-xl text-black font-semibold text-xl md:text-2xl border-t-4 border-blue-600">
+                {/* <div className="absolute mt-[-1.3rem] md:mt-[-1.8rem] lg:mt-[-2.3rem] left-1/2 md:left-[12rem] lg:left-[15rem] transform -translate-x-1/2 bg-white px-8 lg:px-16 py-3 text-center shadow-lg rounded-xl text-black font-semibold text-xl md:text-2xl border-t-4 border-blue-600">
                     <Typography className="text-sm md:text-lg lg:text-2xl w-full text-nowrap">{heading}</Typography>
-                </div>
+                </div> */}
+
+                <h2 className="text-4xl font-extrabold text-white text-center pt-6">
+                    {heading}
+                </h2>
             </div>
 
             {/* Scroll Buttons */}

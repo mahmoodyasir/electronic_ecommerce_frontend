@@ -6,6 +6,12 @@ import './RegisterUser.css'
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
+import { CountryCode, snackBarDataType } from "../../../utils/utils";
+import { createUser } from "../../../ApiGateways/users";
+import { data } from "framer-motion/client";
+import GlobalSnackbar from "../../../component/GlobalSnackbar/GlobalSnackbar";
+import { useAppDispatch } from "../../../Redux/app/hooks";
+import { setUserState } from "../../../Redux/features/userSlice";
 
 const theme = createTheme({
     palette: {
@@ -20,23 +26,86 @@ const theme = createTheme({
 
 const RegisterUser = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [countryCode, setCountryCode] = useState('+880')
+    const [countryInitial, setCountryInitial] = useState<CountryCode>('BD')
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
+    const [snackbarState, setSnackbarState] = useState<snackBarDataType>({
+        isActive: false,
+        verticalPosition: "top",
+        horizontalPosition: "center",
+        message: "",
+        alertType: "success",
+    });
+
     const handleRegister = (event: any) => {
         event.preventDefault();
-        const final_phone = countryCode + phone
-        console.log("Registering with:", { firstName, lastName, final_phone, email, password });
+
+        const body = {
+            first_name: firstName,
+            last_name: lastName,
+            phone_number: phone,
+            countryCode: countryCode,
+            countryInitial: countryInitial,
+            email: email,
+            password: password,
+        }
+
+        createUser(body,
+            (data) => {
+
+                dispatch(setUserState(data?.user));
+                localStorage.setItem('access-token', data.tokens?.access);
+                localStorage.setItem('refresh-token', data.tokens?.refresh);
+
+                setSnackbarState({
+                    isActive: true,
+                    verticalPosition: 'top',
+                    horizontalPosition: 'center',
+                    message: 'Login successful!',
+                    alertType: 'success'
+                });
+
+                setTimeout(() => {
+                    navigate('/');
+                }, 1600);
+            },
+            (res) => {
+                console.log(res)
+                setSnackbarState({
+                    isActive: true,
+                    verticalPosition: "top",
+                    horizontalPosition: "center",
+                    message: res?.error,
+                    alertType: "error"
+                });
+            }
+        )
     };
 
 
     return (
         <form onSubmit={handleRegister}>
+            <>
+                {snackbarState?.isActive && (
+                    <GlobalSnackbar
+                        verticalPosition={snackbarState?.verticalPosition}
+                        horizontalPosition={snackbarState?.horizontalPosition}
+                        message={snackbarState?.message}
+                        alertType={snackbarState?.alertType}
+                        onfinish={() => {
+                            setSnackbarState({ ...snackbarState, isActive: false })
+                        }}
+                    />
+                )}
+            </>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Box className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
@@ -69,9 +138,11 @@ const RegisterUser = () => {
 
 
                         <TextField
+                            required
                             label="Phone Number"
                             variant="outlined"
                             fullWidth
+                            name="phone_number"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="mb-4"
@@ -80,10 +151,13 @@ const RegisterUser = () => {
                                     <InputAdornment position="start">
                                         <PhoneInput
                                             international
-                                            defaultCountry="BD"
+                                            defaultCountry={countryInitial}
                                             value={countryCode}
                                             onChange={(value) => {
-                                                setCountryCode(value as string);
+                                                setCountryCode(value as string)
+                                            }}
+                                            onCountryChange={(country: CountryCode) => {
+                                                setCountryInitial(country)
                                             }}
                                             className="w-full"
                                         />

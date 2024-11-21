@@ -66,7 +66,16 @@ const LoginUser = () => {
                 if (from === '/') navigate('/');
                 else navigate(from, { replace: true });
             },
-            (res) => console.log(res)
+            (res) => {
+                console.log(res);
+                setSnackbarState({
+                    isActive: true,
+                    verticalPosition: "top",
+                    horizontalPosition: "center",
+                    message: res?.error,
+                    alertType: "error"
+                });
+            }
         )
     };
 

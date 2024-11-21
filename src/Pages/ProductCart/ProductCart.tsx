@@ -9,6 +9,7 @@ const ProductCart = () => {
     const navigate = useNavigate();
     const [totalPrice, setTotalPrice] = useState(0);
 
+
     const footerElement = (
         <section className="flex flex-col sm:flex-row justify-between items-center bg-violet-600 text-white py-4 px-6 rounded-lg mt-4">
             <div className="flex items-center space-x-2 mb-2 sm:mb-0">
@@ -36,6 +37,11 @@ const ProductCart = () => {
             return total + price;
         }, 0);
         setTotalPrice(newTotal);
+
+        if(Object.entries(myCart).length < 1)
+        {
+            navigate('/');
+        }
     }, [myCart]);
 
     return (
