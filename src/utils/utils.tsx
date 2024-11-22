@@ -21,10 +21,10 @@ export const convertToTitle = (str: string) => {
 }
 
 
-type Category = {
-    id: number;
-    name: string;
-};
+// type Category = {
+//     id: number;
+//     name: string;
+// };
 
 export type KeyFeature = {
     id: number;
