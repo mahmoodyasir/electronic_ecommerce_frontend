@@ -13,11 +13,11 @@ const faqData = [
     },
     {
         question: "How can I track my order?",
-        answer: "Once your order is shipped, you will receive a tracking link via email to monitor its status.",
+        answer: "Once your order is placed, you can track it's status from My Orders section of your profile.",
     },
     {
         question: "What payment methods do you accept?",
-        answer: "We accept Visa, MasterCard, American Express, PayPal, and other major payment options.",
+        answer: "We accept Visa, MasterCard, SSLCOMMERZ, and other major payment options.",
     },
     {
         question: "How do I contact customer support?",

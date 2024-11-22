@@ -3,11 +3,14 @@ import { Breadcrumbs, Button, Drawer, IconButton, List, ListItem, ListItemIcon, 
 import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 import { convertToTitle } from "../utils/utils";
+import { useAppDispatch } from "../Redux/app/hooks";
+import { setLogOut } from "../Redux/features/userSlice";
 
 
 const UserLayout = () => {
 
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
 
@@ -20,6 +23,14 @@ const UserLayout = () => {
     const location = useLocation();
 
     const pathnames = location.pathname.split("/").filter((x) => x);
+
+
+    const handleLogOut = () => {
+        localStorage.setItem('access-token', '');
+        localStorage.setItem('refresh-token', '');
+        dispatch(setLogOut())
+        navigate('/login')
+    }
 
 
     const sidebarContent = (
@@ -58,9 +69,9 @@ const UserLayout = () => {
                 {/* Sidebar for Desktop */}
                 <aside className="hidden md:block w-64 bg-white shadow-lg">
                     {sidebarContent}
-                    <Button className="w-full text-black">
+                    <Button className="w-full text-black" onClick={() => handleLogOut()}>
                         <ListItem className=" text-red-700">
-                            <ListItemIcon><ExitToApp className=" text-red-700"/></ListItemIcon>
+                            <ListItemIcon><ExitToApp className=" text-red-700" /></ListItemIcon>
                             <ListItemText primary="Logout" />
                         </ListItem>
                     </Button>

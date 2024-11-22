@@ -26,6 +26,7 @@ const UserProfile = () => {
 
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    
 
     // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     setUserData({

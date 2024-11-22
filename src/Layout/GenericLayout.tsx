@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom"
 import Header from "../component/Navbar/Header/Header"
+import Footer from "./Footer"
 
 
 const GenericLayout = () => {
@@ -11,6 +12,9 @@ const GenericLayout = () => {
       <section className="flex-grow">
         <Outlet />
       </section>
+
+      <Footer />
+
     </main>
   )
 }
