@@ -1,6 +1,5 @@
-import { ExitToApp, Favorite, Person, ShoppingCart, Home as HomeIcon, AccountCircle, Menu as MenuIcon } from "@mui/icons-material"
-import { Breadcrumbs, Button, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
-import { useState } from "react";
+import { ExitToApp, Favorite, ShoppingCart, AccountCircle } from "@mui/icons-material"
+import { Breadcrumbs, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 import { convertToTitle } from "../utils/utils";
 import { useAppDispatch } from "../Redux/app/hooks";
@@ -9,7 +8,6 @@ import { setLogOut } from "../Redux/features/userSlice";
 
 const UserLayout = () => {
 
-    const [drawerOpen, setDrawerOpen] = useState(false);
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();

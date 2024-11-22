@@ -17,7 +17,7 @@ const MyWishList = () => {
 
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart({ product, quantity: 1 }));
-    dispatch(removeFromWishlist(product?.id))
+    dispatch(removeFromWishlist(product?.id));
   };
 
   if (wishlist.length === 0) {
@@ -52,19 +52,15 @@ const MyWishList = () => {
         {wishlist.map((product) => (
           <Card
             key={product.id}
-            className="flex items-center bg-white shadow-xl rounded-xl overflow-hidden transform hover:scale-105 transition-transform duration-300"
+            className="flex flex-col lg:flex-row items-center bg-white shadow-xl rounded-xl overflow-hidden transform hover:scale-105 transition-transform duration-300"
           >
             {/* Product Image */}
-            <div className="w-1/3 relative">
+            <div className="w-full md:w-1/3 relative">
               <CardMedia
                 component="img"
                 image={product.image_urls[0] || "/default-image.jpg"}
                 alt={product.name}
-                style={{
-                  objectFit: "contain",
-                  maxHeight: "15rem",
-                  // maxWidth: "16rem",
-                }}
+                className="w-full h-auto object-contain max-h-60"
               />
               <IconButton
                 onClick={() => handleRemoveFromWishlist(product)}
@@ -75,7 +71,7 @@ const MyWishList = () => {
             </div>
 
             {/* Product Details */}
-            <div className="w-2/3 flex flex-col p-6 space-y-4">
+            <div className="w-full md:w-2/3 flex flex-col p-6 space-y-4">
               <Typography
                 variant="h6"
                 className="font-bold text-gray-800 line-clamp-2 text-xl leading-tight"
@@ -95,7 +91,7 @@ const MyWishList = () => {
               <Typography className="text-gray-600 text-sm line-clamp-3">
                 {product.description}
               </Typography>
-              <div className="flex justify-between items-center mt-auto">
+              <div className="flex flex-col lg:flex-row justify-between items-center gap-4 mt-auto">
                 <Button
                   className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-800 transform hover:scale-105 transition-transform duration-300"
                   onClick={() => handleAddToCart(product)}
