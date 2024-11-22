@@ -369,10 +369,10 @@ const ProductLists = () => {
                 value={categoryName}
                 onChange={(e) => {
                   const catVal = e.target.value as string
-                  setCategoryName(catVal);
+                  setCategoryName(catVal === "" ? "all" : catVal);
                   setFilterDict({
                     ...filterDict,
-                    category: catVal === "all" ? "" : catVal
+                    category: catVal === "all" || catVal === "" ? "" : catVal
                   });
                 }}
 
