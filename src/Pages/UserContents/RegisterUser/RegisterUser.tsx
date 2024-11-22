@@ -8,10 +8,10 @@ import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
 import { CountryCode, snackBarDataType } from "../../../utils/utils";
 import { createUser } from "../../../ApiGateways/users";
-import { data } from "framer-motion/client";
 import GlobalSnackbar from "../../../component/GlobalSnackbar/GlobalSnackbar";
 import { useAppDispatch } from "../../../Redux/app/hooks";
 import { setUserState } from "../../../Redux/features/userSlice";
+
 
 const theme = createTheme({
     palette: {

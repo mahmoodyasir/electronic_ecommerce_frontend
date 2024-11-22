@@ -4,7 +4,7 @@ import { getAllfilteredProduct, getProductById } from "../../ApiGateways/product
 import { MAX_PRICE_LIMIT, Product, Specification } from "../../utils/utils";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { Avatar, Badge, Box, Button, ButtonGroup, Chip, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
+import {  Button, ButtonGroup, Chip, Divider, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../Redux/app/hooks";
 import { addToCart, decreaseCartItem, increaseCartItem } from "../../Redux/features/productCartSlice";
 
