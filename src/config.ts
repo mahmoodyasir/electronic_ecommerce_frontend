@@ -1,2 +1,2 @@
 // export const url = "http://localhost:8000";
-export const url = "https://3.82.191.125";
+export const url = "https://electronic-ecommerce-1.shop";
