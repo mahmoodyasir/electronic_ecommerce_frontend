@@ -17,7 +17,7 @@ const MyWishList = () => {
 
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart({ product, quantity: 1 }));
-    dispatch(removeFromWishlist(product?.id));
+    dispatch(removeFromWishlist(product?._id));
   };
 
   if (wishlist.length === 0) {
@@ -51,7 +51,7 @@ const MyWishList = () => {
       <div className="space-y-6">
         {wishlist.map((product) => (
           <Card
-            key={product.id}
+            key={product._id}
             className="flex flex-col lg:flex-row items-center bg-white shadow-xl rounded-xl overflow-hidden transform hover:scale-105 transition-transform duration-300"
           >
             {/* Product Image */}
@@ -101,7 +101,7 @@ const MyWishList = () => {
                 <Button
                   variant="outlined"
                   className="text-indigo-600 border-indigo-600 hover:text-indigo-800 hover:border-indigo-800 px-4 py-2 rounded-lg"
-                  onClick={() => navigate(`/product_details/${product.id}`)}
+                  onClick={() => navigate(`/product_details/${product._id}`)}
                 >
                   Details
                 </Button>

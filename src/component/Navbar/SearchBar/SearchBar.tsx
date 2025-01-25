@@ -86,7 +86,7 @@ const SearchBar = () => {
                     }
                 }}
                 autoHighlight
-                getOptionLabel={(option) => (typeof option === 'string' ? option : option.name + " " + option.category)}
+                getOptionLabel={(option) => (typeof option === 'string' ? option : option.name + " " + option.category?.name)}
                 renderOption={(props, option) => (
                     <li {...props}>
                         <span style={{ display: "flex", gap: "1rem", alignItems: "center" }}>

@@ -18,7 +18,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const dispatch = useAppDispatch();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    const isFavorited = wishlist.some((item) => item.id === product.id);
+    const isFavorited = wishlist.some((item) => item._id === product._id);
 
     const handleFavoriteToggle = () => {
         dispatch(addToWishlist(product));
@@ -91,10 +91,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     </Typography>
 
                     {
-                        product?.discount_price && product?.discount_price > 0 &&
+                        product?.discount_price && product?.discount_price > 0 ?
                         <Typography className="line-through text-red-500 text-center text-xs sm:text-sm md:text-base lg:text-lg">
                             ${product.price}
                         </Typography>
+                        :
+                        <></>
                     }
                 </div>
 
@@ -114,7 +116,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         className="flex-1 text-sm h-full"
                         fullWidth
                         onClick={() => {
-                            navigate(`/product_details/${product?.id}`);
+                            navigate(`/product_details/${product?._id}`);
                         }}
                     >
                         Details

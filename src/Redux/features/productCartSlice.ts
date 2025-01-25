@@ -21,7 +21,7 @@ const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action: PayloadAction<{ product: Product; quantity: number }>) => {
             const { product, quantity } = action.payload;
-            const productId = product.id;
+            const productId = product._id;
             // const total_price = product.price * quantity;
             const total_price = product?.discount_price && product?.discount_price > 0 ? product?.discount_price * quantity : product.price * quantity
 

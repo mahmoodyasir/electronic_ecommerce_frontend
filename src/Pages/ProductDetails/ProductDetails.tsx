@@ -12,6 +12,7 @@ import { addToCart, decreaseCartItem, increaseCartItem } from "../../Redux/featu
 const ProductDetails = () => {
 
     const { id } = useParams();
+    // console.log(id);
     const myCart = useAppSelector((state) => state.cartState);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -21,10 +22,11 @@ const ProductDetails = () => {
 
 
     useEffect(() => {
-        getProductById(Number(id),
+        getProductById(String(id),
             (data) => {
-                setProductData(data);
-                setMainImage(data.image_urls[0]);
+                // console.log(data?.data);
+                setProductData(data?.data);
+                setMainImage(data?.data?.image_urls[0]);
             },
             (res) => console.log(res)
         );
@@ -34,7 +36,7 @@ const ProductDetails = () => {
     useEffect(() => {
         const filter = {
             name: "",
-            category: productData?.category || "",
+            category: productData?.category?.name || "",
             key_features: {},
             min_price: 0,
             max_price: MAX_PRICE_LIMIT
@@ -42,11 +44,13 @@ const ProductDetails = () => {
 
         getAllfilteredProduct(1, 4, filter,
             (data) => {
+                // console.log(data?.data);
                 setRelatedProduct(data?.data);
             },
             res => console.log(res)
         )
     }, [productData])
+
 
     if (!productData) {
         return <Typography>Loading...</Typography>;
@@ -69,8 +73,8 @@ const ProductDetails = () => {
     };
 
 
-    const groupedSpecs = groupSpecificationsByCategory(productData.specifications);
-
+    const groupedSpecs = groupSpecificationsByCategory(productData?.specifications);
+    
 
     const handleAddToCart = (product: any, quantity: number) => {
         dispatch(addToCart({ product, quantity }));
@@ -129,19 +133,19 @@ const ProductDetails = () => {
                         <div className="flex flex-wrap gap-4">
                             {/* Brand */}
                             <Chip
-                                label={<span><strong>Brand:</strong> {productData.brand}</span>}
+                                label={<span><strong>Brand:</strong> {productData?.brand}</span>}
                                 color="primary"
                             />
 
                             {/* Category */}
                             <Chip
-                                label={<span><strong>Category:</strong> {productData.category}</span>}
+                                label={<span><strong>Category:</strong> {productData?.category?.name}</span>}
                                 color="secondary"
                             />
 
                             {/* Product Code */}
                             <Chip
-                                label={<span><strong>Product Code:</strong> {productData.product_code}</span>}
+                                label={<span><strong>Product Code:</strong> {productData?.product_code}</span>}
                                 color="error"
                             />
                         </div>
@@ -163,7 +167,7 @@ const ProductDetails = () => {
                         <div className="space-y-2">
                             <h2 className="text-xl font-semibold text-gray-800">Key Features</h2>
                             <ul className="list-disc list-inside space-y-1">
-                                {productData.key_features.map((feature, index) => (
+                                {productData?.key_features?.map((feature, index) => (
                                     <li key={index} className="text-gray-700">
                                         <strong>{feature.name}:</strong> {feature.value.join(", ")}
                                     </li>
@@ -175,7 +179,7 @@ const ProductDetails = () => {
                         <div className="flex items-center space-x-4">
                             <ButtonGroup className=" border-black border-[1px]" color="secondary" aria-label="Medium-sized button group">
                                 <Button
-                                    onClick={() => handleDecreaseQuantity(productData?.id)}
+                                    onClick={() => handleDecreaseQuantity(productData?._id)}
                                     className=' border-l-0 border-t-0 border-b-0 border-r-[1px] border-black text-red-500 hover:bg-red-400 hover:text-white'>
                                     <RemoveIcon />
                                 </Button>
@@ -183,7 +187,7 @@ const ProductDetails = () => {
                                     {myCart[String(id)]?.quantity || 0}
                                 </Button>
                                 <Button
-                                    onClick={() => handleIncreaseQuantity(Number(productData?.id), productData, 1)}
+                                    onClick={() => handleIncreaseQuantity(Number(productData?._id), productData, 1)}
                                     className='border-l-[1px] border-t-0 border-b-0 border-r-0 border-black text-green-500 hover:bg-green-400 hover:text-white'>
                                     <AddIcon />
                                 </Button>
@@ -206,7 +210,7 @@ const ProductDetails = () => {
                     <div className="shadow-2xl px-5 py-8 rounded-lg">
                         <Typography className="text-2xl font-semibold text-gray-900 mb-4">Specifications</Typography>
                         <div className="flex flex-col gap-6">
-                            {Object.keys(groupedSpecs).map((category, index) => (
+                            {Object.keys(groupedSpecs)?.map((category, index) => (
                                 <div
                                     key={index}
                                     className="bg-indigo-50 p-4 rounded-md shadow-md space-y-2 border-l-4 border-indigo-600"
@@ -260,7 +264,7 @@ const ProductDetails = () => {
                                             {/* Details Button */}
                                             <Button
                                                 className="mt-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition duration-200"
-                                                onClick={() => { navigate(`/product_details/${item?.id}`) }}
+                                                onClick={() => { navigate(`/product_details/${item?._id}`) }}
                                             >
                                                 Details
                                             </Button>

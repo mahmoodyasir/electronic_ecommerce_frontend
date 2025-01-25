@@ -128,7 +128,10 @@ const MyOrders = () => {
 
   useEffect(() => {
     getCustomersOrder(
-      (data) => setOrders(data),
+      (data) => {
+        // console.log(data?.data);
+        setOrders(data?.data);
+      },
       (error) => console.error(error)
     );
   }, []);
@@ -138,7 +141,7 @@ const MyOrders = () => {
       <Typography variant="h4" className="font-bold text-center mb-6">
         Your Orders
       </Typography>
-      {orders.length > 0 ? (
+      {orders?.length > 0 ? (
         <PaginatedOrders orders={orders} />
       ) : (
         <Typography variant="body1" className="text-center text-gray-500">

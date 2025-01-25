@@ -52,6 +52,8 @@ const TextParallaxContentComponent = () => {
       )
     }, []);
 
+    // console.log(categoryType);
+
     return (
       <div>
 

@@ -274,7 +274,7 @@ const ProductLists = () => {
     const timeoutId = setTimeout(() => {
       getAllfilteredProduct(page, ITEM_PER_PAGE, filterDict,
         (data) => {
-          // console.log(data)
+          // console.log(data);
           dispatch(setProducts(data));
           setPage(data?.page);
           setTotalPage(data?.total_page);
@@ -302,15 +302,15 @@ const ProductLists = () => {
     getFeature(
       categoryName === "all" ? "" : categoryName,
       (data) => {
+        // console.log(data);
         setCategoryType([...new Set([...categoryType, ...(data?.data?.category?.map((item: any) => item?.name))])])
-        setFilters(data?.data?.feature);
-        setExpandedKeys(Object.keys(data?.data?.feature).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
+        setFilters(data?.data?.features);
+        setExpandedKeys(Object.keys(data?.data?.features).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
       },
       res => console.log(res)
     )
 
   }, [categoryName]);
-
 
 
   return (

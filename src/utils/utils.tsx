@@ -33,7 +33,7 @@ export type KeyFeature = {
 };
 
 export type Specification = {
-    id: number;
+    _id?: string;
     category: string;
     name: string;
     value: string[];
@@ -46,14 +46,20 @@ export type Inventory = {
     last_restocked: string;
 };
 
+export type ProductCategory = {
+    _id: string;
+    name: string;
+}
+
 export type Product = {
-    id: number | string;
+    _id:string;
+    // id: number | string;
     name: string;
     price: number;
     discount_price?: number | null;
     product_code: string;
     brand: string;
-    category: string;
+    category: ProductCategory;
     description: string;
     image_urls: string[];
     images?: [];
@@ -76,7 +82,7 @@ export type FilterTypes = {
 export type CountryCode = 'BD' | 'CA';
 
 export type User = {
-    id: number | string;
+    _id: number | string;
     username: string;
     email: string;
     first_name: string;

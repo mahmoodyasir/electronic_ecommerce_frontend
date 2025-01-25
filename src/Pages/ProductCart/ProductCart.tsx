@@ -45,7 +45,7 @@ const ProductCart = () => {
     }, [myCart]);
 
     return (
-        <div className="flex justify-center w-full mt-6">
+        <div className="flex justify-center w-full mt-6 mb-6">
             <div className="w-full xl:w-2/5 lg:w-3/5 bg-gray-50 shadow-md rounded-lg">
                 <OrderSummary header={header} footerElement={footerElement} cart={myCart} />
             </div>
