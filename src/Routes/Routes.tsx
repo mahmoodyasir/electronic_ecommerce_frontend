@@ -13,6 +13,8 @@ import ProductCart from "../Pages/ProductCart/ProductCart";
 import MyOrders from "../Pages/UserContents/MyOrders/MyOrders";
 import MyWishList from "../Pages/UserContents/MyWishList/MyWishList";
 import CheckoutPage from "../Pages/Orders/CheckoutPage";
+import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import ValidatorPage from "../Pages/ValidatorPage/ValidatorPage";
 
 const router = createBrowserRouter([
     {
@@ -48,6 +50,10 @@ const router = createBrowserRouter([
                 element: <UserRoute><CheckoutPage /></UserRoute>
             },
             {
+                path: "/payment/:val_id",
+                element: <ValidatorPage />
+            },
+            {
                 path: "/user_profile",
                 element: (
                     <UserRoute>
@@ -68,6 +74,10 @@ const router = createBrowserRouter([
                         element: <MyWishList />
                     },
                 ]
+            },
+            {
+                path: "*",
+                element: <ErrorPage />
             }
         ]
     }

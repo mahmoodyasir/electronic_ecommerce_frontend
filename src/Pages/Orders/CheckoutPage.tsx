@@ -110,14 +110,21 @@ const CheckoutPage = () => {
             products: products
         }
 
+        // console.log(body)
+
         createOrder(body,
             (data) => {
-                if (data?.payment_type === "online") {
-                    if (data?.response_data?.GatewayPageURL !== null) {
-                        window.location.replace(data?.response_data?.GatewayPageURL);
-                    }
+
+                const value = data?.data;
+
+                console.log(value)
+
+                if (value?.gatewayPageURL && value?.gatewayPageURL !== null) {
+                    dispatch(clearCart());
+                    window.location.replace(value?.gatewayPageURL);
                 }
-                else if (data?.payment_type === "cash") {
+
+                else if (value?.payment_type === "cash") {
                     setSnackbarState({
                         isActive: true,
                         verticalPosition: "top",
