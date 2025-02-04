@@ -113,7 +113,7 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ products, heading =
                 onMouseLeave={handleMouseUpOrLeave}
             >
                 {products.map((product) => (
-                    <div key={product.id} className="min-w-[300px] max-w-[350px] flex flex-shrink-0">
+                    <div key={product?._id} className="min-w-[300px] max-w-[350px] flex flex-shrink-0">
                         <ProductCard product={product} />
                     </div>
                 ))}
